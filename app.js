@@ -6,6 +6,7 @@ const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const discRoutes = require('./routes/disc');
 const userRoutes = require('./routes/users');
+const checkinRoutes = require('./routes/checkin');
 
 const {NotFoundError} = require("./expressError");
 
@@ -21,6 +22,7 @@ app.use(authenticateJWT);
 app.use("/auth", authRoutes);
 app.use('/discs', discRoutes);
 app.use('/users', userRoutes);
+app.use('/checkin', checkinRoutes);
 
 // handle 404 errors
 

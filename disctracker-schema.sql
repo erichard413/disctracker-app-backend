@@ -23,5 +23,7 @@ CREATE TABLE check_ins (
     city TEXT NOT NULL,
     state TEXT NOT NULL,
     zip TEXT NOT NULL,
-    date TEXT NOT NULL
+    date TEXT NOT NULL,
+    latitude INTEGER,
+    longitude INTEGER
 )
