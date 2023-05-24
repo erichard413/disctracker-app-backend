@@ -6,12 +6,40 @@ const express = require('express');
 const router = new express.Router();
 const userAuthSchema = require('../schema/userAuth.json');
 const {BadRequestError} = require('../expressError');
+const {paginatedResults} = require('../helpers/paginatedResults');
+const {ensureCorrectUserOrAdmin, ensureAdmin} = require('../middleware/auth');
 
 // GET /checkin
 // Retrieves all check ins
 router.get('/', async function(req, res, next){
     const result = await checkIn.getAll();
     return res.json({result})
+})
+
+// GET /checkin/:discId
+// Retrieves all check ins for requested discId
+// Query options: direction (ASC/DESC), limit (integer);
+router.get('/:discId', async function(req, res, next){
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+    let orderBy = req.query.direction === 'DESC' ? 'DESC' : 'ASC';
+    try {
+        const result = await checkIn.getCheckInsByDisc(req.params.discId, orderBy);
+        return res.json(paginatedResults(result, page, limit));
+    } catch (err) {
+        return next(err);
+    }
+})
+
+// GET /checkin/id/:id
+// Retrieves single check in with id
+router.get('/id/:id', async function (req, res, next){
+    try {
+        const result = await checkIn.getCheckInById(req.params.id);
+        return res.json(result);
+    } catch(err) {
+        return next(err);
+    }
 })
 
 // POST /checkin
@@ -33,5 +61,31 @@ router.post('/:discId', async function(req, res, next) {
         return next(err);
     }
 })
+
+// DELETE /checkin/:id
+// Deletes a check in.
+// AUTH REQUIRED: Admin
+router.delete('/:id', ensureAdmin, async function(req, res, next) {
+    try {
+        await checkIn.deleteCheckIn(req.params.id);
+        return res.json({message: `Check in id ${req.params.id} deleted successfully!`});
+    } catch (err) {
+        return next(err);
+    }
+})
+
+// PATCH /checkin/:id
+// updates a check in.
+// AUTH REQUIRED: Admin
+// body can include: disc_id, course_name, city, state, zip 
+router.patch('/:id', ensureAdmin, async function(req, res, next) {
+    try {
+        const result = await checkIn.updateCheckIn(req.params.id, req.body);
+        return res.json({updated: result});
+    } catch(err) {
+        return next(err);
+    }
+})
+
 
 module.exports = router;
