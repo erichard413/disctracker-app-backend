@@ -44,5 +44,16 @@ router.post('/register', async function (req, res, next){
     }
 })
 
+// GET /auth/forgotuser
+// retrieves user Id
+router.get('/forgotuser', async function (req, res, next){
+    try {
+        const result = await User.forgotUserId(req.body.email, req.body.firstName);
+        return res.json({userId: result})
+    } catch (err) {
+        return next(err);
+    }
+})
+
 
 module.exports = router;

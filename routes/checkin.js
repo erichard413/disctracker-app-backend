@@ -52,7 +52,10 @@ router.get('/id/:id', async function (req, res, next){
 //     zip
 // }
 router.post('/:discId', async function(req, res, next) {
-    const username = res.locals.user.username || 'Anonymous';
+    let username = null;
+   if (res.locals.user) {
+        username = res.locals.user.username
+   } 
     try {
         // ADD JSON SCHEMA VALIDATION HERE ---------
         const result = await checkIn.doCheckIn(req.params.discId, username, req.body);

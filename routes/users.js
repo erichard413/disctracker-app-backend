@@ -82,5 +82,27 @@ router.delete('/:username', ensureAdmin, async function(req, res, next) {
     }
 })
 
+// PATCH /:username/auth/reset
+// reset PW, send temporary password to user
+router.patch('/:username/auth/reset', async function (req, res, next) {
+    try {
+        await User.resetPassword(req.params.username);
+        return res.json({message: "Password sent to email on file."});
+    } catch (err) {
+        return next(err);
+    }
+})
+
+// PATCH /:username/changepassword
+// change password
+// Auth required: ADMIN/that logged in user only
+router.patch('/:username/auth/change', ensureCorrectUserOrAdmin, async function (req, res, next) {
+    try {
+        await User.changePassword(req.params.username, req.body.password);
+        return res.status(201).json({message: `Password change successful!`})
+    } catch(err) {
+        return next(err);
+    }
+});
 
 module.exports = router;
