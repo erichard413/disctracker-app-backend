@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth");
 const discRoutes = require('./routes/disc');
 const userRoutes = require('./routes/users');
 const checkinRoutes = require('./routes/checkin');
+const courseRoutes = require('./routes/courses');
 
 const {NotFoundError} = require("./expressError");
 
@@ -23,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use('/discs', discRoutes);
 app.use('/users', userRoutes);
 app.use('/checkin', checkinRoutes);
+app.use('/courses', courseRoutes);
 
 // handle 404 errors
 

@@ -55,7 +55,7 @@ class User {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     const result = await db.query(
-      `INSERT INTO users (username, password, first_name, last_name, email, join_date, is_admin) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, false) RETURNING username, first_name AS firstName, last_name AS lastName, email, join_date AS joinDate, is_admin AS isAdmin`, [username.toLowerCase(), hashedPassword, firstName, lastName, email.toLowerCase()]
+      `INSERT INTO users (username, password, first_name, last_name, email, join_date, is_admin) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, false) RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`, [username.toLowerCase(), hashedPassword, firstName, lastName, email.toLowerCase()]
     );
     const user = result.rows[0];
     return user;
@@ -77,17 +77,17 @@ class User {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     const result = await db.query(
-      `INSERT INTO users (username, password, first_name, last_name, email, join_date, is_admin) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, $6) RETURNING username, first_name AS firstName, last_name AS lastName, email, join_date AS joinDate, is_admin AS isAdmin`, [username.toLowerCase(), hashedPassword, firstName, lastName, email.toLowerCase(), isAdmin]
+      `INSERT INTO users (username, password, first_name, last_name, email, join_date, is_admin) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, $6) RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`, [username.toLowerCase(), hashedPassword, firstName, lastName, email.toLowerCase(), isAdmin]
     );
     const user = result.rows[0];
     return user;
   }
   static async getAll() {
-    const result = await db.query(`SELECT username, first_name AS firstName, last_name AS lastName, join_date AS joinDate, email, is_admin AS isAdmin FROM users`);
+    const result = await db.query(`SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users`);
     return result.rows;
   }
   static async getUser(username) {
-    const result = await db.query(`SELECT username, first_name AS firstName, last_name AS lastName, join_date AS joinDate, email, is_admin AS isAdmin FROM users WHERE username=$1`, [username]);
+    const result = await db.query(`SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users WHERE username=$1`, [username]);
     if (!result.rows[0]) throw new NotFoundError(`Username ${username} not found!`);
     return result.rows[0];
   }
@@ -105,7 +105,7 @@ class User {
             email: "email"
         });
     const usernameVarIdx = "$"+(values.length+1);
-    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS joinDate, is_admin AS "isAdmin"`;
+    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`;
     const result = await db.query(querySQL, [...values, username]);
     const user = result.rows[0];
 
@@ -127,7 +127,7 @@ static async adminUpdateUser(username, data) {
             isAdmin: "is_admin"
         });
     const usernameVarIdx = "$"+(values.length+1);
-    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS joinDate, is_admin AS "isAdmin"`;
+    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`;
     const result = await db.query(querySQL, [...values, username]);
     const user = result.rows[0];
 

@@ -4,7 +4,7 @@ const jsonschema = require("jsonschema");
 const checkIn = require('../models/checkin');
 const express = require('express');
 const router = new express.Router();
-const userAuthSchema = require('../schema/userAuth.json');
+const checkInNewSchema = require('../schema/checkInNew.json');
 const {BadRequestError} = require('../expressError');
 const {paginatedResults} = require('../helpers/paginatedResults');
 const {ensureCorrectUserOrAdmin, ensureAdmin} = require('../middleware/auth');
@@ -57,7 +57,11 @@ router.post('/:discId', async function(req, res, next) {
         username = res.locals.user.username
    } 
     try {
-        // ADD JSON SCHEMA VALIDATION HERE ---------
+        const validator = jsonschema.validate(req.body, checkInNewSchema);
+        if (!validator.valid) {
+          const errs = validator.errors.map(e => e.stack);
+          throw new BadRequestError(errs);
+        }
         const result = await checkIn.doCheckIn(req.params.discId, username, req.body);
         return res.json(result);
     } catch(err) {
@@ -83,6 +87,11 @@ router.delete('/:id', ensureAdmin, async function(req, res, next) {
 // body can include: disc_id, course_name, city, state, zip 
 router.patch('/:id', ensureAdmin, async function(req, res, next) {
     try {
+        const validator = jsonschema.validate(req.body, checkInNewSchema);
+        if (!validator.valid) {
+          const errs = validator.errors.map(e => e.stack);
+          throw new BadRequestError(errs);
+        }
         const result = await checkIn.updateCheckIn(req.params.id, req.body);
         return res.json({updated: result});
     } catch(err) {
