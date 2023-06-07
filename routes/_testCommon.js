@@ -1,10 +1,10 @@
 "use strict";
 
 const db = require('../db');
-const user = require('./user');
-const Disc = require('./disc');
-const Course = require('./course');
-const CheckIn = require('./checkin');
+const user = require('../models/user');
+const Disc = require('../models/disc');
+const Course = require('../models/course');
+const CheckIn = require('../models/checkin');
 const CheckInMock = require("../mocks/checkinmock.js");
 const {createToken} = require('../helpers/tokens');
 

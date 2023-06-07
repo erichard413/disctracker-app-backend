@@ -11,7 +11,7 @@ const router = new express.Router();
 
 // GET /all
 // Gets list of all users, admin required
-router.get('/all', ensureAdmin, async function(req, res, next) {
+router.get('/', ensureAdmin, async function(req, res, next) {
     try {
         const result = await User.getAll();
         return res.json(result);

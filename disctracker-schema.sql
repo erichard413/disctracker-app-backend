@@ -25,6 +25,7 @@ CREATE TABLE check_ins (
     state TEXT NOT NULL,
     zip TEXT NOT NULL,
     date TEXT NOT NULL,
+    country TEXT NOT NULL,
     latitude TEXT,
     longitude TEXT
 )
