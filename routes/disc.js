@@ -11,7 +11,7 @@ const {ensureAdmin} = require('../middleware/auth');
 
 // GET /all
 // This route will get all tracked discs from Db.
-router.get('/all', async function (req, res, next) {
+router.get('/', async function (req, res, next) {
     const result = await Disc.getAll();
     return res.json(result)
 })
@@ -43,10 +43,10 @@ router.patch('/:id', ensureAdmin, async function (req, res, next) {
     }
 })
 
-// POST /discs/new
+// POST /discs
 // This route will add a new disc into the DB.
 // Auth required: admin only.
-router.post('/new', ensureAdmin, async function (req, res, next) {
+router.post('/', ensureAdmin, async function (req, res, next) {
     try {
         const validator = jsonschema.validate(req.body, discNew);
         if(!validator.valid) {
@@ -66,7 +66,7 @@ router.post('/new', ensureAdmin, async function (req, res, next) {
 router.delete('/:id', ensureAdmin, async function (req, res, next) {
     try {
         await Disc.deleteDisc(req.params.id);
-        return res.status(200).json({message: `Disc id ${req.params.id} deleted.`})
+        return res.status(204).json({message: `Disc id ${req.params.id} deleted.`})
     } catch(err) {
         return next(err);
     }    

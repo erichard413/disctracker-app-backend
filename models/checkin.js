@@ -22,9 +22,9 @@ class checkIn {
         return result.rows[0];
     }
     static async getCheckInsByDisc(discId, direction='DESC') {
-        let queryString = `SELECT * FROM check_ins WHERE disc_id=$1 ORDER BY date ${direction}`
+        let queryString = `SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude FROM check_ins WHERE disc_id=$1 ORDER BY date ${direction}`
         const result = await db.query(queryString, [discId]);
-        if (!result.rows) throw new NotFoundError(`No check ins for disc id ${discId} found!`);
+        if (result.rows.length === 0) throw new NotFoundError(`No check ins for disc id ${discId} found!`);
         return result.rows;
     }
     static async deleteCheckIn(id) {

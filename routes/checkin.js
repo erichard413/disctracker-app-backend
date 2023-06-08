@@ -12,8 +12,10 @@ const {ensureCorrectUserOrAdmin, ensureAdmin} = require('../middleware/auth');
 // GET /checkin
 // Retrieves all check ins
 router.get('/', async function(req, res, next){
+    const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
     const result = await checkIn.getAll();
-    return res.json({result})
+    return res.json(paginatedResults(result, page, limit))
 })
 
 // GET /checkin/:discId
@@ -75,7 +77,7 @@ router.post('/:discId', async function(req, res, next) {
 router.delete('/:id', ensureAdmin, async function(req, res, next) {
     try {
         await checkIn.deleteCheckIn(req.params.id);
-        return res.json({message: `Check in id ${req.params.id} deleted successfully!`});
+        return res.status(204).json({message: `Check in id ${req.params.id} deleted successfully!`});
     } catch (err) {
         return next(err);
     }
