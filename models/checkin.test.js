@@ -138,4 +138,21 @@ describe("works: should retrieve check in by id", function(){
     })
 })
 
+/************************************** get check in by id */
+describe("works: should retrieve check in by username", function() {
+    test("retrieves check in of username", async function(){
+        const result = await CheckIn.getCheckInsByUser('u1');
+        expect(result[0].username).toEqual('u1');
+        expect(result[0].courseName).toEqual('Course1');
+    })
+    test("errors when bad username", async function(){
+        try {
+            await CheckIn.getCheckInsByUser('blah');
+        } catch (err) {
+            expect(err).toBeInstanceOf(NotFoundError);
+        }
+    })
+})
+
+
 

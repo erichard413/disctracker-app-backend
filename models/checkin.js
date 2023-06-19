@@ -64,6 +64,13 @@ class checkIn {
         if (!result.rows[0]) throw new NotFoundError(`Cannot find check in with id: ${id}`);
         return result.rows[0];
     }
+    static async getCheckInsByUser(username) {
+        const userCheck = await db.query(`SELECT username FROM users WHERE username=$1`, [username]);
+        if (!userCheck.rows[0]) throw new NotFoundError(`Cannot find check in with username: ${username}`);
+
+        const result = await db.query(`SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude FROM check_ins WHERE username=$1`, [username]);
+        return result.rows;
+    }
 }
 
 module.exports = checkIn;

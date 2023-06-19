@@ -44,6 +44,17 @@ router.get('/id/:id', async function (req, res, next){
     }
 })
 
+// GET /checkin/user/:username
+// Retrieves check ins from user
+router.get('/user/:username', async function (req, res, next){
+    try {
+        const result = await checkIn.getCheckInsByUser(req.params.username);
+        return res.json(result);
+    } catch (err) {
+        return next(err);
+    }
+})
+
 // POST /checkin
 // Creates a new check in.
 // req.body must include:

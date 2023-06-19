@@ -85,6 +85,27 @@ describe("GET /checkin/id/:id", function(){
     })
 })
 
+/************************************** GET /checkin/user/:username */
+
+describe("GET /checkin/user/:username", function(){
+    test("works: should retrieve check in data based on username", async function(){
+        const resp = await request(app).get(`/checkin/user/u1`);
+        expect(resp.body).toEqual([{
+            "username" : "u1",
+            "id" : expect.any(Number),
+            "discId" : 12345,
+            "courseName" : "Course1",
+            "city" : "City1",
+            "state" : "State1",
+            "zip" : "11111",
+            "date" : expect.any(String),
+            "country" : "United States",
+            "latitude" : expect.any(String),
+            "longitude" : expect.any(String)
+        }])
+    })
+})
+
 /************************************** DELETE /checkin/:id */
 
 describe("DELETE /checkin/:id", function(){
