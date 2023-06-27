@@ -27,7 +27,7 @@ describe("GET /users", function(){
     test("works for admins: gets list of all users", async function () {
         const resp = await request(app).get("/users").set("authorization", `Bearer ${adminToken}`);
         expect(resp.statusCode).toBe(200);
-        expect(resp.body.length).toEqual(3);
+        expect(resp.body.results.length).toEqual(3);
     })
     test("unauth for non-admins", async function() {
         const resp = await request(app).get("/users").set("authorization", `Bearer ${u1Token}`);

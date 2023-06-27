@@ -4,6 +4,7 @@ const jsonschema = require("jsonschema");
 const userNew = require('../schema/userNew.json');
 const express = require("express");
 const {ensureCorrectUserOrAdmin, ensureAdmin} = require('../middleware/auth');
+const {paginatedResults} = require('../helpers/paginatedResults');
 const {BadRequestError} = require('../expressError');
 const User = require('../models/user');
 const {createToken} = require('../helpers/tokens');
@@ -13,8 +14,10 @@ const router = new express.Router();
 // Gets list of all users, admin required
 router.get('/', ensureAdmin, async function(req, res, next) {
     try {
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 15 
         const result = await User.getAll();
-        return res.json(result);
+        return res.json(paginatedResults(result, page, limit));
     } catch (err) {
         return next(err);
     }
