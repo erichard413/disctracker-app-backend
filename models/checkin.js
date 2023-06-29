@@ -11,7 +11,7 @@ const {
 
 class checkIn {
     static async getAll() {
-        const result = await db.query(`SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude FROM check_ins`);
+        const result = await db.query(`SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude FROM check_ins ORDER BY date DESC`);
         return result.rows;
     }
     static async doCheckIn(discId, username, {courseName, city, state, zip, country}) {
