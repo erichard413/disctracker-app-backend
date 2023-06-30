@@ -82,8 +82,13 @@ class User {
     const user = result.rows[0];
     return user;
   }
-  static async getAll() {
-    const result = await db.query(`SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users`);
+  static async getAll(nameLike) {
+    let params = [];
+    let queryString = `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users`;
+    if (nameLike) queryString += ` WHERE username ILIKE $1`;
+    if (nameLike) params.push(`%${nameLike}%`);
+    queryString += ` ORDER BY username ASC`;
+    const result = await db.query(queryString, params);
     return result.rows;
   }
   static async getUser(username) {

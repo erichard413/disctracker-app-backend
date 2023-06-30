@@ -13,10 +13,11 @@ const router = new express.Router();
 // GET /all
 // Gets list of all users, admin required
 router.get('/', ensureAdmin, async function(req, res, next) {
+    const nameLike = req.query.nameLike || null;
     try {
         const page = parseInt(req.query.page) || 1
         const limit = parseInt(req.query.limit) || 15 
-        const result = await User.getAll();
+        const result = await User.getAll(nameLike);
         return res.json(paginatedResults(result, page, limit));
     } catch (err) {
         return next(err);
