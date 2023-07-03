@@ -41,7 +41,7 @@ describe("GET /checkin/:discId", function(){
             id: expect.any(Number),
             username: "u1",
             courseName: "Course1",
-            discId: 12345,
+            discId: "12345",
             date: expect.any(String),
             state: "State1",
             zip: "11111",
@@ -62,13 +62,13 @@ describe("GET /checkin/:discId", function(){
 describe("GET /checkin/id/:id", function(){
     test("works: should retrieve check in data based on id", async function(){
         const checkins = await request(app).get("/checkin");
-        const id = checkins.body.results[0].id;
+        const id = checkins.body.results[checkins.body.results.length-1].id;
         const resp = await request(app).get(`/checkin/id/${id}`);
         expect(resp.statusCode).toBe(200);
         expect(resp.body).toEqual({
             "username": "u1",
 	        "id": id,
-	        "discId": 12345,
+	        "discId": "12345",
 	        "courseName": "Course1",
 	        "city": "City1",
 	        "state": "State1",
@@ -93,7 +93,7 @@ describe("GET /checkin/user/:username", function(){
         expect(resp.body).toEqual([{
             "username" : "u1",
             "id" : expect.any(Number),
-            "discId" : 12345,
+            "discId" : "12345",
             "courseName" : "Course1",
             "city" : "City1",
             "state" : "State1",

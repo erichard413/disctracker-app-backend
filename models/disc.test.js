@@ -26,7 +26,7 @@ describe("works: get all discs", function(){
     test("should retrieve all discs", async function(){
         const result = await Disc.getAll();
         expect(result.length).toEqual(3);
-        expect(result[0].id).toBe(12345);
+        expect(result[0].id).toBe("12345");
         expect(result[1].name).toBe('Name2');
         expect(result[2].manufacturer).toBe('Manufacturer3');
     })
@@ -37,7 +37,7 @@ describe("works: get all discs", function(){
 describe("works: creates disc", function(){
     test("should create a new disc", async function(){
         const newDisc = {
-            id: 78901,
+            id: "78901",
             manufacturer: 'Manufacturer4',
             plastic: "Plastic4",
             name: "Name4"
@@ -75,7 +75,7 @@ describe("works: gets disc with id", function(){
     test("should retrieve a disc with id", async function(){
         const result = await Disc.getDisc('67891');
         expect(result).toEqual({
-            id: 67891,
+            id: "67891",
             manufacturer: "Manufacturer2",
             plastic: "Plastic2",
             name: "Name2"

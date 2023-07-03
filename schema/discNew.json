@@ -19,7 +19,7 @@
         "maxLength": 30
       },
       "id": {
-        "type": "integer",
+        "type": "string",
         "minLength": 1,
         "maxLength": 30
       }

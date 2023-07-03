@@ -38,7 +38,7 @@ describe("GET /discs/:id", function(){
         const resp = await request(app).get("/discs/12345");
         expect(resp.statusCode).toBe(200);
         expect(resp.body).toEqual({
-                "id": 12345,
+                "id": "12345",
                 "manufacturer": "Manufacturer1",
                 "plastic": "Plastic1",
                 "name": "Name1"
@@ -65,7 +65,7 @@ describe("PATCH /discs/:id", function(){
         })
         const updatedDiscResp = await request(app).get("/discs/12345");
         expect(updatedDiscResp.body).toEqual({
-            "id": 12345,
+            "id": "12345",
             "manufacturer": "Manufacturer1-update",
             "plastic": "Plastic1-update",
             "name": "Name1-update"
@@ -89,7 +89,7 @@ describe("PATCH /discs/:id", function(){
 
 describe("POST /discs", function(){
     const newDisc = {
-            id: 101010,
+            id: "101010",
             name: "test-name",
             manufacturer: "test-manufacturer",
             plastic: "test-plastic",

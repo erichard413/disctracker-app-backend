@@ -22,7 +22,7 @@ class Disc {
           if (duplicateCheck.rows[0]) {
             throw new BadRequestError(`Disc id ${id} already exists!`);
           }
-        const result = await db.query(`INSERT INTO discs (id, manufacturer, plastic, name) VALUES ($1,$2,$3,$4) RETURNING id, manufacturer, plastic, name`, [+id, manufacturer, plastic, name]);
+        const result = await db.query(`INSERT INTO discs (id, manufacturer, plastic, name) VALUES ($1,$2,$3,$4) RETURNING id, manufacturer, plastic, name`, [id, manufacturer, plastic, name]);
         return result.rows[0]; 
     }
     static async deleteDisc(id) {
@@ -32,7 +32,7 @@ class Disc {
         return;
     }
     static async getDisc(id) {
-        const result = await db.query(`SELECT * FROM discs WHERE id=$1`, [+id]);
+        const result = await db.query(`SELECT * FROM discs WHERE id=$1`, [id]);
         if (!result.rows[0]) throw new NotFoundError(`Couldn't find disc with id of ${id}`);
         return result.rows[0];
     }

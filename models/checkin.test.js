@@ -43,7 +43,7 @@ describe("works: should do check in", function(){
         await CheckInMock.doCheckIn('12345', 'u1', newCheckIn);
         // now check to see if new entry exists in db.
         const result = await CheckIn.getAll();
-        expect(result[result.length-1]).toEqual({...newCheckIn, id: expect.any(Number), username: 'u1', discId: 12345, date: expect.any(String), latitude: expect.any(String), longitude: expect.any(String)})
+        expect(result[0]).toEqual({...newCheckIn, id: expect.any(Number), username: 'u1', discId: '12345', date: expect.any(String), latitude: expect.any(String), longitude: expect.any(String)})
     })
 })
 
@@ -124,7 +124,7 @@ describe("works: should update check in", function() {
 describe("works: should retrieve check in by id", function(){
     test("retrieves check in of id", async function(){
         const checkins = await CheckIn.getAll();
-        const result = await CheckIn.getCheckInById(checkins[checkins.length-1].id);
+        const result = await CheckIn.getCheckInById(checkins[0].id);
         expect(result.courseName).toEqual('Course3');
         expect(result.city).toEqual('City3');
         expect(result.state).toEqual('State3');
