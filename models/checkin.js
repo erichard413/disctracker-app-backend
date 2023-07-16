@@ -3,6 +3,7 @@
 const db = require('../db');
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { geocode } = require('../helpers/geocode');
+const { calcTotal } = require('../helpers/haversine');
 const {
   NotFoundError,
   BadRequestError,
@@ -70,6 +71,14 @@ class checkIn {
 
         const result = await db.query(`SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude FROM check_ins WHERE username=$1`, [username]);
         return result.rows;
+    }
+    static async getDistanceForDisc(discId) {
+        const discCheck = await db.query(`SELECT id FROM discs WHERE id=$1`, [discId]);
+        if (!discCheck.rows[0]) throw new NotFoundError(`Cannot find disc with id: ${discId}`);
+
+        const result = await db.query(`SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude FROM check_ins WHERE disc_id=$1`, [discId]);
+        const distance = calcTotal(result.rows);
+        return distance;
     }
 }
 

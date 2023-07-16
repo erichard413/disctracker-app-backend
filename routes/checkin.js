@@ -44,6 +44,17 @@ router.get('/id/:id', async function (req, res, next){
     }
 })
 
+// GET /checkin/distance/:discId
+// Retrieves sum of distance travelled for Disc ID.
+router.get('/distance/:discId', async function (req, res, next){
+    try {
+        const result = await checkIn.getDistanceForDisc(req.params.discId);
+        return res.json({distance: result});
+    } catch(err) {
+        return next(err);
+    }
+}) 
+
 // GET /checkin/user/:username
 // Retrieves check ins from user
 router.get('/user/:username', async function (req, res, next){
