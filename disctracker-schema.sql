@@ -27,7 +27,8 @@ CREATE TABLE check_ins (
     date TEXT NOT NULL,
     country TEXT NOT NULL,
     latitude TEXT,
-    longitude TEXT
+    longitude TEXT,
+    note VARCHAR(255)
 );
 
 CREATE TABLE courses (

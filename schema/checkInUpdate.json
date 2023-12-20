@@ -29,9 +29,6 @@
     },
     "additionalProperties": true,
     "required": [
-      "courseName",
-      "city",
-      "state",
-      "zip"
+      
     ]
   }

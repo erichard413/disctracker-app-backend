@@ -48,7 +48,8 @@ describe("GET /checkin/:discId", function(){
             city: "City1",
             country: "United States",
             latitude: expect.any(String),
-            longitude: expect.any(String)
+            longitude: expect.any(String),
+            note: null
         })
     })
     test("404 when bad disc id", async function(){
@@ -76,7 +77,8 @@ describe("GET /checkin/id/:id", function(){
 	        "date": expect.any(String),
 	        "country": "United States",
 	        "latitude": expect.any(String),
-	        "longitude": expect.any(String)
+	        "longitude": expect.any(String),
+            "note": null
         })
     })
     test("404 when bad id", async function(){
@@ -101,7 +103,8 @@ describe("GET /checkin/user/:username", function(){
             "date" : expect.any(String),
             "country" : "United States",
             "latitude" : expect.any(String),
-            "longitude" : expect.any(String)
+            "longitude" : expect.any(String),
+            "note" : null
         }])
     })
 })

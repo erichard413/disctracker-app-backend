@@ -38,11 +38,13 @@ describe("works: should do check in", function(){
             city: "NewCity",
             state: "NewState",
             zip: "NewZip",
-            country: "NewCountry"
+            country: "NewCountry",
+            note: "I am a note"
         }
         await CheckInMock.doCheckIn('12345', 'u1', newCheckIn);
         // now check to see if new entry exists in db.
         const result = await CheckIn.getAll();
+        console.log(result);
         expect(result[0]).toEqual({...newCheckIn, id: expect.any(Number), username: 'u1', discId: '12345', date: expect.any(String), latitude: expect.any(String), longitude: expect.any(String)})
     })
 })
