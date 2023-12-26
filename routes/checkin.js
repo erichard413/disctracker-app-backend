@@ -80,8 +80,11 @@ router.get("/distance/:discId", async function (req, res, next) {
 // Retrieves check ins from user
 router.get("/user/:username", async function (req, res, next) {
   try {
-    const result = await checkIn.getCheckInsByUser(req.params.username);
-    return res.json(result);
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const dir = req.query.direction || null;
+    const result = await checkIn.getCheckInsByUser(req.params.username, dir);
+    return res.json(paginatedResults(result, page, limit));
   } catch (err) {
     return next(err);
   }

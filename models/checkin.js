@@ -120,9 +120,9 @@ class checkIn {
       throw new NotFoundError(`Cannot find check in with id: ${id}`);
     return result.rows[0];
   }
-  static async getCheckInsByUser(username) {
+  static async getCheckInsByUser(username, dir = "DESC") {
     const userCheck = await db.query(
-      `SELECT username FROM users WHERE username=$1`,
+      `SELECT username FROM users WHERE username=$1 `,
       [username]
     );
     if (!userCheck.rows[0])
@@ -131,7 +131,7 @@ class checkIn {
       );
 
     const result = await db.query(
-      `SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude, note FROM check_ins WHERE username=$1`,
+      `SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude, note FROM check_ins WHERE username=$1 ORDER BY date ${dir}`,
       [username]
     );
     return result.rows;
