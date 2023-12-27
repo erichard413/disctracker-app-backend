@@ -17,7 +17,9 @@ const { getCounts } = require("../helpers/getCounts");
 router.get("/", async function (req, res, next) {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
-  const result = await checkIn.getAll();
+  let orderBy = req.query.direction === "ASC" ? "ASC" : "DESC";
+  const { courseName, date, userName } = req.query;
+  const result = await checkIn.getAll(courseName, date, userName, orderBy);
   return res.json(paginatedResults(result, page, limit));
 });
 

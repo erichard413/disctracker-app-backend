@@ -11,9 +11,33 @@ const {
 } = require("../expressError");
 
 class checkIn {
-  static async getAll() {
+  static async getAll(
+    courseName = null,
+    date = null,
+    username = null,
+    orderBy
+  ) {
+    const queryParams = [];
+    let queryString = `SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude, note FROM check_ins`;
+    if (courseName) {
+      queryParams.push(`%${courseName}%`);
+      queryString += ` WHERE course_name ILIKE $${queryParams.length}`;
+    }
+    if (date) {
+      queryParams.push(`%${date}%`);
+      queryString += ` ${
+        queryParams.length > 1 ? "AND" : "WHERE"
+      } date ILIKE $${queryParams.length}`;
+    }
+    if (username) {
+      queryParams.push(`%${username}%`);
+      queryString += ` ${
+        queryParams.length > 1 ? "AND" : "WHERE"
+      } username ILIKE $${queryParams.length}`;
+    }
     const result = await db.query(
-      `SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude, note FROM check_ins ORDER BY date DESC`
+      `${queryString} ORDER BY date ${orderBy}`,
+      queryParams
     );
     return result.rows;
   }
