@@ -247,7 +247,6 @@ class User {
     if (!result.rows[0])
       throw new NotFoundError(`Cannot find account for email ${email}`);
     const retrievedUser = result.rows[0];
-    console.log(retrievedUser);
     if (retrievedUser.firstName.toLowerCase() !== firstName.toLowerCase())
       throw new BadRequestError(`First name could not be verified!`);
     return retrievedUser.username;

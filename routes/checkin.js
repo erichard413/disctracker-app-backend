@@ -8,7 +8,11 @@ const checkInNewSchema = require("../schema/checkInNew.json");
 const checkInUpdateSchema = require("../schema/checkInUpdate.json");
 const { BadRequestError } = require("../expressError");
 const { paginatedResults } = require("../helpers/paginatedResults");
-const { ensureCorrectUserOrAdmin, ensureAdmin } = require("../middleware/auth");
+const {
+  ensureCorrectUserOrAdmin,
+  ensureAdmin,
+  ensureReqBodyCorrectUserOrAdmin,
+} = require("../middleware/auth");
 const { calcTotal } = require("../helpers/haversine");
 const { getCounts } = require("../helpers/getCounts");
 
@@ -94,14 +98,16 @@ router.get("/user/:username", async function (req, res, next) {
 
 // POST /checkin
 // Creates a new check in.
-// req.body must include:
+// req.body must include (note optional):
 // {
 //     course_name,
 //     city,
 //     state,
-//     zip
+//     zip,
+//     *note
 // }
 router.post("/:discId", async function (req, res, next) {
+  console.log(req.body);
   let username = null;
   if (res.locals.user) {
     username = res.locals.user.username;
@@ -125,34 +131,42 @@ router.post("/:discId", async function (req, res, next) {
 
 // DELETE /checkin/:id
 // Deletes a check in.
-// AUTH REQUIRED: Admin
-router.delete("/:id", ensureAdmin, async function (req, res, next) {
-  try {
-    await checkIn.deleteCheckIn(req.params.id);
-    return res
-      .status(204)
-      .json({ message: `Check in id ${req.params.id} deleted successfully!` });
-  } catch (err) {
-    return next(err);
+// AUTH REQUIRED: Admin or Correct User
+router.delete(
+  "/:id",
+  ensureReqBodyCorrectUserOrAdmin,
+  async function (req, res, next) {
+    try {
+      await checkIn.deleteCheckIn(req.params.id);
+      return res.status(204).json({
+        message: `Check in id ${req.params.id} deleted successfully!`,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
-});
+);
 
 // PATCH /checkin/:id
 // updates a check in.
-// AUTH REQUIRED: Admin
+// AUTH REQUIRED: Admin or Correct User
 // body can include: disc_id, course_name, city, state, zip
-router.patch("/:id", ensureAdmin, async function (req, res, next) {
-  try {
-    const validator = jsonschema.validate(req.body, checkInUpdateSchema);
-    if (!validator.valid) {
-      const errs = validator.errors.map(e => e.stack);
-      throw new BadRequestError(errs);
+router.patch(
+  "/:id",
+  ensureReqBodyCorrectUserOrAdmin,
+  async function (req, res, next) {
+    try {
+      const validator = jsonschema.validate(req.body, checkInUpdateSchema);
+      if (!validator.valid) {
+        const errs = validator.errors.map(e => e.stack);
+        throw new BadRequestError(errs);
+      }
+      const result = await checkIn.updateCheckIn(req.params.id, req.body);
+      return res.json({ updated: result });
+    } catch (err) {
+      return next(err);
     }
-    const result = await checkIn.updateCheckIn(req.params.id, req.body);
-    return res.json({ updated: result });
-  } catch (err) {
-    return next(err);
   }
-});
+);
 
 module.exports = router;

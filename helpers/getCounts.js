@@ -75,7 +75,6 @@ const states = {
 };
 
 function getCounts(checkins) {
-  console.log(checkins);
   const stateSet = new Set();
   const userSet = new Set();
   const countrySet = new Set();
