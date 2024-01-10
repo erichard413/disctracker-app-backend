@@ -134,9 +134,20 @@ class User {
     const result = await db.query(queryString, params);
     return result.rows;
   }
-  static async getUser(username) {
+  //This is to retrieve user data as an ADMIN -> admins get access to full account information
+  static async adminGetUser(username) {
     const result = await db.query(
       `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users WHERE username=$1`,
+      [username]
+    );
+    if (!result.rows[0])
+      throw new NotFoundError(`Username ${username} not found!`);
+    return result.rows[0];
+  }
+  //This is to get another user's data - limited information
+  static async getUser(username) {
+    const result = await db.query(
+      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate" FROM users WHERE username=$1`,
       [username]
     );
     if (!result.rows[0])
