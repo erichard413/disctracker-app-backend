@@ -10,19 +10,20 @@ const discUpdate = require("../schema/discUpdate.json");
 const { ensureAdmin } = require("../middleware/auth");
 const { paginatedResults } = require("../helpers/paginatedResults");
 
-// GET /all
+// GET /discs
 // This route will get all tracked discs from Db.
 router.get("/", async function (req, res, next) {
   const page = parseInt(req.query.page);
   const limit = parseInt(req.query.limit);
+  const { id, manufacturer, name, plastic } = req.query;
   try {
-    const result = await Disc.getAll();
+    const result = await Disc.getDiscs({ id, manufacturer, name, plastic });
     if (page && limit) {
       return res.json(paginatedResults(result, page, limit));
     } else {
       return res.json(result);
     }
-  } catch {
+  } catch (err) {
     return next(err);
   }
 });
