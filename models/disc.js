@@ -10,7 +10,6 @@ const {
 
 class Disc {
   static async getDiscs(data = null) {
-    console.log(data);
     //If there's no req.body in the search, return all discs.
     // otherwise, we need to handle our search
     const queryParams = [];

@@ -113,7 +113,6 @@ router.get("/user/:username", async function (req, res, next) {
 //     *note
 // }
 router.post("/:discId", async function (req, res, next) {
-  console.log(req.body);
   let username = null;
   if (res.locals.user) {
     username = res.locals.user.username;

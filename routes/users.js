@@ -25,12 +25,13 @@ router.get("/", ensureAdmin, async function (req, res, next) {
 });
 
 // GET /:username
-// Gets user data, admin OR that logged in user
+// Gets basic user information
+// Will output full data for admin or correct user
 router.get("/:username", async function (req, res, next) {
   const user = res.locals.user;
   try {
     const result =
-      user && user.isAdmin
+      user && (user.isAdmin || user.username == req.params.username)
         ? await User.adminGetUser(req.params.username)
         : await User.getUser(req.params.username);
     return res.json(result);
