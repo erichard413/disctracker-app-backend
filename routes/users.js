@@ -97,6 +97,25 @@ router.delete("/:username", ensureAdmin, async function (req, res, next) {
   }
 });
 
+// PATCH /:username/image
+// updates user with provided image url
+// Auth required: admin or correct user.
+router.patch(
+  "/:username/image",
+  ensureCorrectUserOrAdmin,
+  async function (req, res, next) {
+    try {
+      const result = await User.uploadProfileImg(
+        req.params.username,
+        req.body.url
+      );
+      return res.json(result);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 // PATCH /:username/auth/reset
 // reset PW, send temporary password to user
 router.patch("/:username/auth/reset", async function (req, res, next) {

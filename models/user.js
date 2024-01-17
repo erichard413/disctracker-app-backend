@@ -127,7 +127,7 @@ class User {
   }
   static async getAll(nameLike) {
     let params = [];
-    let queryString = `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users`;
+    let queryString = `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", image_url AS "imgUrl" FROM users`;
     if (nameLike) queryString += ` WHERE username ILIKE $1`;
     if (nameLike) params.push(`%${nameLike}%`);
     queryString += ` ORDER BY username ASC`;
@@ -137,7 +137,7 @@ class User {
   //This is to retrieve user data as an ADMIN -> admins get access to full account information
   static async adminGetUser(username) {
     const result = await db.query(
-      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin" FROM users WHERE username=$1`,
+      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", image_url AS "imgUrl" FROM users WHERE username=$1`,
       [username]
     );
     if (!result.rows[0])
@@ -147,7 +147,7 @@ class User {
   //This is to get another user's data - limited information
   static async getUser(username) {
     const result = await db.query(
-      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate" FROM users WHERE username=$1`,
+      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", image_url AS "imgUrl" FROM users WHERE username=$1`,
       [username]
     );
     if (!result.rows[0])
@@ -178,7 +178,7 @@ class User {
       email: "email",
     });
     const usernameVarIdx = "$" + (values.length + 1);
-    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`;
+    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`;
     const result = await db.query(querySQL, [...values, username]);
     const user = result.rows[0];
 
@@ -186,6 +186,13 @@ class User {
 
     delete user.password;
     return user;
+  }
+  static async uploadProfileImg(username, url) {
+    const result = await db.query(
+      `UPDATE users SET image_url=$1 WHERE username=$2 RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`,
+      [url, username]
+    );
+    return result.rows[0];
   }
   static async adminUpdateUser(username, data) {
     // encrypt the password, if data contains it.
@@ -211,7 +218,7 @@ class User {
       isAdmin: "is_admin",
     });
     const usernameVarIdx = "$" + (values.length + 1);
-    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`;
+    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`;
     const result = await db.query(querySQL, [...values, username]);
     const user = result.rows[0];
 
