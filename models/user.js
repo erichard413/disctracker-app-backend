@@ -4,6 +4,9 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 const { sqlForPartialUpdate } = require("../helpers/sql");
 const { sendEmail } = require("../helpers/sendEmail");
+const axios = require("axios");
+const crypto = require("crypto");
+
 const {
   NotFoundError,
   BadRequestError,
@@ -235,6 +238,24 @@ class User {
     if (!userCheck.rows[0])
       throw new NotFoundError(`Couldn't find username of ${username}`);
     await db.query(`DELETE FROM users WHERE username=$1`, [username]);
+    return;
+  }
+  static async deleteProfileImg(publicId) {
+    const timestamp = new Date().getTime();
+    const string = `public_id=${publicId}&timestamp=${timestamp}${process.env.CLOUDINARY_SECRET_KEY}`;
+    const createdHash = crypto.createHash("sha1");
+    createdHash.update(string);
+    const signature = createdHash.digest("hex");
+
+    const formData = new FormData();
+    formData.append("public_id", publicId);
+    formData.append("signature", signature);
+    formData.append("api_key", process.env.CLOUDINARY_API_KEY);
+    formData.append("timestamp", timestamp);
+    await axios.post(
+      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/destroy`,
+      formData
+    );
     return;
   }
   static async resetPassword(username) {

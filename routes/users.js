@@ -116,6 +116,23 @@ router.patch(
   }
 );
 
+// DELETE /:username/image
+// deletes provided image url from cloudinary service
+// Auth required: admin or correct user.
+router.delete(
+  "/:username/image",
+  ensureCorrectUserOrAdmin,
+  async function (req, res, next) {
+    const publicId = req.query.id;
+    try {
+      await User.deleteProfileImg(publicId);
+      return res.status(200).json({ message: `Image deleted!` });
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 // PATCH /:username/auth/reset
 // reset PW, send temporary password to user
 router.patch("/:username/auth/reset", async function (req, res, next) {
