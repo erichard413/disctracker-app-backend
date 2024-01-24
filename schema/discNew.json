@@ -1,34 +1,32 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "properties": {
-      "manufacturer": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 30
-      },
-      "plastic": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 30
-      },
-      "name": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 30
-      },
-      "id": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 30
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "manufacturer": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
     },
-    "additionalProperties": false,
-    "required": [
-      "manufacturer",
-      "plastic",
-      "name",
-      "id"
-    ]
-  }
+    "plastic": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30
+    },
+    "imgUrl": {
+      "type": ["string", "null"]
+    }
+  },
+  "additionalProperties": false,
+  "required": ["manufacturer", "plastic", "name", "id"]
+}

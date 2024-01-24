@@ -14,7 +14,7 @@ class Disc {
     // otherwise, we need to handle our search
     const queryParams = [];
     const { id, manufacturer, plastic, name } = data;
-    let queryString = `SELECT * FROM discs`;
+    let queryString = `SELECT id, manufacturer, plastic, name, image_url AS "imgUrl" FROM discs`;
     if (id) {
       queryString += queryParams.length > 0 ? " AND" : " WHERE";
       queryString += ` id=$${queryParams.length + 1}`;
@@ -39,7 +39,7 @@ class Disc {
     const result = await db.query(queryString, queryParams);
     return result.rows;
   }
-  static async createDisc({ id, manufacturer, plastic, name }) {
+  static async createDisc({ id, manufacturer, plastic, name, imgUrl }) {
     const duplicateCheck = await db.query(
       `SELECT name FROM discs WHERE id=$1`,
       [id]
@@ -49,8 +49,8 @@ class Disc {
       throw new BadRequestError(`Disc id ${id} already exists!`);
     }
     const result = await db.query(
-      `INSERT INTO discs (id, manufacturer, plastic, name) VALUES ($1,$2,$3,$4) RETURNING id, manufacturer, plastic, name`,
-      [id, manufacturer, plastic, name]
+      `INSERT INTO discs (id, manufacturer, plastic, name, image_url) VALUES ($1,$2,$3,$4,$5) RETURNING id, manufacturer, plastic, name, image_url AS "imgUrl"`,
+      [id, manufacturer, plastic, name, imgUrl]
     );
     return result.rows[0];
   }
@@ -68,9 +68,11 @@ class Disc {
     return result.rows[0];
   }
   static async editInfo(id, data) {
+    data["image_url"] = data.imgUrl;
+    delete data["imgUrl"];
     const { setCols, values } = sqlForPartialUpdate(data, {});
     const idVarIdx = "$" + (values.length + 1);
-    const querySQL = `UPDATE discs SET ${setCols} WHERE id = ${idVarIdx} RETURNING id, manufacturer, plastic, name`;
+    const querySQL = `UPDATE discs SET ${setCols} WHERE id = ${idVarIdx} RETURNING id, manufacturer, plastic, name, image_url AS "imgUrl"`;
     const result = await db.query(querySQL, [...values, id]);
     const disc = result.rows[0];
     if (!disc) throw new NotFoundError(`No disc of id ${id}`);

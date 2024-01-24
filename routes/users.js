@@ -133,6 +133,23 @@ router.delete(
   }
 );
 
+// PATCH /:username/image/reset
+// reset image_url to null for user
+// auth required: admin OR correct user
+router.patch(
+  "/:username/image/reset",
+  ensureCorrectUserOrAdmin,
+  async function (req, res, next) {
+    const username = req.params.username;
+    try {
+      const result = await User.resetProfileImg(username);
+      return res.status(200).json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 // PATCH /:username/auth/reset
 // reset PW, send temporary password to user
 router.patch("/:username/auth/reset", async function (req, res, next) {

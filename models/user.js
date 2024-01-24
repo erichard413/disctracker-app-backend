@@ -256,7 +256,20 @@ class User {
       `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/destroy`,
       formData
     );
-    return;
+  }
+  // set image for username to null in db
+  static async resetProfileImg(username) {
+    const userCheck = await db.query(
+      `SELECT first_name FROM users WHERE username=$1`,
+      [username]
+    );
+    if (!userCheck.rows[0])
+      throw new NotFoundError(`Couldn't find username of ${username}`);
+    const result = await db.query(
+      `UPDATE users SET image_url=null WHERE username=$1 RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`,
+      [username]
+    );
+    return result.rows[0];
   }
   static async resetPassword(username) {
     const email = await db.query(`SELECT email FROM users WHERE username=$1`, [

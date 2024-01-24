@@ -2,7 +2,8 @@ CREATE TABLE discs (
     id TEXT PRIMARY KEY,
     manufacturer TEXT NOT NULL,
     plastic TEXT NOT NULL,
-    name TEXT NOT NULL
+    name TEXT NOT NULL,
+    image_url TEXT
 );
 
 CREATE TABLE users (

@@ -1,34 +1,32 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "http://example.com/example.json",
-    "type": "object",
-    "properties": {
-      "courseName": {
-        "type": "string",
-        "minLength": 5,
-        "maxLength": 100
-      }, 
-      "city": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 50
-      },
-      "state": {
-        "type": "string",
-        "maxLength": 50
-      },
-      "zip": {
-        "type": "string",
-        "minLength": 5,
-        "maxLength": 15
-      },
-      "note": {
-        "type": "string",
-        "maxLength": 300
-      }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "properties": {
+    "courseName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
     },
-    "additionalProperties": true,
-    "required": [
-      
-    ]
-  }
+    "city": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "state": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "zip": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 15
+    },
+    "note": {
+      "type": "string",
+      "maxLength": 300
+    }
+  },
+  "additionalProperties": true,
+  "required": []
+}
