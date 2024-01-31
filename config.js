@@ -11,7 +11,7 @@ const PORT = +process.env.PORT || 3001;
 
 function getDatabaseUri() {
   return process.env.NODE_ENV === "test"
-    ? `postgres://${process.env.PG_USER}:${process.env.PG_PASSWORD}@localhost:5432/disctracker_test`
+    ? `postgres://${process.env.TEST_PG_USER}:${process.env.TEST_PG_PASSWORD}@localhost:5432/disctracker_test`
     : process.env.DATABASE_URL ||
         `postgres://${process.env.PG_USER}:${process.env.PG_PASSWORD}@localhost:5432/disctracker`;
 }

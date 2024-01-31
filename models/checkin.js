@@ -15,7 +15,7 @@ class checkIn {
     courseName = null,
     date = null,
     username = null,
-    orderBy
+    orderBy = "DESC"
   ) {
     const queryParams = [];
     let queryString = `SELECT username, id, disc_id AS "discId", course_name AS "courseName", city, state, zip, date, country, latitude, longitude, note FROM check_ins`;

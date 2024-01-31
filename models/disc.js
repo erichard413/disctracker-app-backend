@@ -13,7 +13,7 @@ class Disc {
     //If there's no req.body in the search, return all discs.
     // otherwise, we need to handle our search
     const queryParams = [];
-    const { id, manufacturer, plastic, name } = data;
+    const { id, manufacturer, plastic, name } = data || {};
     let queryString = `SELECT id, manufacturer, plastic, name, image_url AS "imgUrl" FROM discs`;
     if (id) {
       queryString += queryParams.length > 0 ? " AND" : " WHERE";
@@ -62,7 +62,10 @@ class Disc {
     return;
   }
   static async getDisc(id) {
-    const result = await db.query(`SELECT * FROM discs WHERE id=$1`, [id]);
+    const result = await db.query(
+      `SELECT id, manufacturer, plastic, name, image_url AS "imgUrl" FROM discs WHERE id=$1`,
+      [id]
+    );
     if (!result.rows[0])
       throw new NotFoundError(`Couldn't find disc with id of ${id}`);
     return result.rows[0];
