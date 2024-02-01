@@ -57,6 +57,7 @@ describe("GET /users/:username", function () {
       joinDate: expect.any(String),
       email: "user1@user.com",
       isAdmin: false,
+      isSuperAdmin: false,
       imgUrl: null,
     });
   });
@@ -72,6 +73,7 @@ describe("GET /users/:username", function () {
       joinDate: expect.any(String),
       email: "user1@user.com",
       isAdmin: false,
+      isSuperAdmin: false,
       imgUrl: null,
     });
   });
@@ -111,6 +113,7 @@ describe("PATCH /users/:username", function () {
       email: "user1updated@user.com",
       imgUrl: null,
       isAdmin: false,
+      isSuperAdmin: false,
     });
   });
   test("works for that user", async function () {
@@ -131,6 +134,7 @@ describe("PATCH /users/:username", function () {
       email: "user1updated@user.com",
       imgUrl: null,
       isAdmin: false,
+      isSuperAdmin: false,
     });
   });
   test("unauth for non-user", async function () {
@@ -173,6 +177,7 @@ describe("PATCH /users/:username/admin", function () {
       joinDate: expect.any(String),
       email: "user1@user.com",
       isAdmin: true,
+      isSuperAdmin: false,
     });
   });
   test("unauth for that non-admin user", async function () {
@@ -223,6 +228,7 @@ describe("POST /users/new", function () {
         email: "new@email.com",
         joinDate: expect.any(String),
         isAdmin: false,
+        isSuperAdmin: false,
       },
       token: expect.any(String),
     });
@@ -249,6 +255,7 @@ describe("POST /users/new", function () {
         lastName: "Last-newL",
         email: "new@email.com",
         isAdmin: true,
+        isSuperAdmin: false,
       },
       token: expect.any(String),
     });

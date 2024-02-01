@@ -26,7 +26,8 @@ class User {
             first_name AS "firstName", 
             last_name AS "lastName",
             email,
-            is_admin AS "isAdmin" 
+            is_admin AS "isAdmin",
+            is_super_admin AS "isSuperAdmin"
             FROM users WHERE username = $1`,
       [username]
     );
@@ -115,7 +116,7 @@ class User {
 
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     const result = await db.query(
-      `INSERT INTO users (username, password, first_name, last_name, email, join_date, is_admin) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, $6) RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin"`,
+      `INSERT INTO users (username, password, first_name, last_name, email, join_date, is_admin) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, $6) RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin"`,
       [
         username.toLowerCase(),
         hashedPassword,
@@ -130,7 +131,7 @@ class User {
   }
   static async getAll(nameLike) {
     let params = [];
-    let queryString = `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", image_url AS "imgUrl" FROM users`;
+    let queryString = `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl" FROM users`;
     if (nameLike) queryString += ` WHERE username ILIKE $1`;
     if (nameLike) params.push(`%${nameLike}%`);
     queryString += ` ORDER BY username ASC`;
@@ -140,7 +141,7 @@ class User {
   //This is to retrieve user data as an ADMIN -> admins get access to full account information
   static async adminGetUser(username) {
     const result = await db.query(
-      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", image_url AS "imgUrl" FROM users WHERE username=$1`,
+      `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl" FROM users WHERE username=$1`,
       [username]
     );
     if (!result.rows[0])
@@ -181,7 +182,7 @@ class User {
       email: "email",
     });
     const usernameVarIdx = "$" + (values.length + 1);
-    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`;
+    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl"`;
     const result = await db.query(querySQL, [...values, username]);
     const user = result.rows[0];
 
@@ -192,7 +193,7 @@ class User {
   }
   static async uploadProfileImg(username, url) {
     const result = await db.query(
-      `UPDATE users SET image_url=$1 WHERE username=$2 RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`,
+      `UPDATE users SET image_url=$1 WHERE username=$2 RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl"`,
       [url, username]
     );
     return result.rows[0];
@@ -221,7 +222,7 @@ class User {
       isAdmin: "is_admin",
     });
     const usernameVarIdx = "$" + (values.length + 1);
-    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`;
+    const querySQL = `UPDATE users SET ${setCols} WHERE username=${usernameVarIdx} RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl"`;
     const result = await db.query(querySQL, [...values, username]);
     const user = result.rows[0];
 
@@ -266,7 +267,7 @@ class User {
     if (!userCheck.rows[0])
       throw new NotFoundError(`Couldn't find username of ${username}`);
     const result = await db.query(
-      `UPDATE users SET image_url=null WHERE username=$1 RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", image_url AS "imgUrl"`,
+      `UPDATE users SET image_url=null WHERE username=$1 RETURNING username, first_name AS "firstName", last_name AS "lastName", email, join_date AS "joinDate", is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl"`,
       [username]
     );
     return result.rows[0];

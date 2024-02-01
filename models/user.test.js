@@ -31,6 +31,7 @@ describe("authenticate", function () {
       lastName: "U1L",
       email: "user1@user.com",
       isAdmin: false,
+      isSuperAdmin: false,
     });
   });
   test("unauth if no such user", async function () {
@@ -99,6 +100,7 @@ describe("register", function () {
       lastName: "Admin",
       email: "admin@email.com",
       isAdmin: true,
+      isSuperAdmin: false,
     };
     let adminUser = await User.adminRegister({
       ...newAdminUser,
@@ -108,6 +110,7 @@ describe("register", function () {
       ...newAdminUser,
       joinDate: expect.any(String),
       isAdmin: true,
+      isSuperAdmin: false,
     });
   });
 });
@@ -129,6 +132,7 @@ describe("works: updates user", function () {
       email: "update@user.com",
       joinDate: expect.any(String),
       isAdmin: false,
+      isSuperAdmin: false,
     });
   });
   test("should throw error if no user", async function () {

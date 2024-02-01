@@ -15,6 +15,7 @@ CREATE TABLE users (
         CHECK (position('@' IN email) > 1),
     join_date TEXT NOT NULL,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE
+    is_super_admin BOOLEAN NOT NULL DEFAULT FALSE
     image_url TEXT
 );
 
