@@ -138,6 +138,15 @@ class User {
     const result = await db.query(queryString, params);
     return result.rows;
   }
+  static async getAllAdmins(nameLike) {
+    let params = [];
+    let queryString = `SELECT username, first_name AS "firstName", last_name AS "lastName", join_date AS "joinDate", email, is_admin AS "isAdmin", is_super_admin AS "isSuperAdmin", image_url AS "imgUrl" FROM users WHERE is_admin=true AND is_super_admin=false`;
+    if (nameLike) queryString += ` AND username ILIKE $1`;
+    if (nameLike) params.push(`%${nameLike}%`);
+    queryString += ` ORDER BY username ASC`;
+    const result = await db.query(queryString, params);
+    return result.rows;
+  }
   //This is to retrieve user data as an ADMIN -> admins get access to full account information
   static async adminGetUser(username) {
     const result = await db.query(

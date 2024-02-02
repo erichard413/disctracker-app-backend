@@ -42,7 +42,7 @@ function ensureLoggedIn(req, res, next) {
   }
 }
 
-/** Middleware to use when they be logged in as an admin user.
+/** Middleware to use when they must be logged in as an admin user.
  *
  *  If not, raises Unauthorized.
  */
@@ -50,6 +50,23 @@ function ensureLoggedIn(req, res, next) {
 function ensureAdmin(req, res, next) {
   try {
     if (!res.locals.user || !res.locals.user.isAdmin) {
+      throw new UnauthorizedError();
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+}
+
+/** Middleware to use when they must be logged in as a superAdmin user.
+ *
+ *  If not, raises Unauthorized.
+ */
+
+function ensureSuperAdmin(req, res, next) {
+  console.log(res.locals.user);
+  try {
+    if (!res.locals.user || !res.locals.user.isSuperAdmin) {
       throw new UnauthorizedError();
     }
     return next();
@@ -100,4 +117,5 @@ module.exports = {
   ensureAdmin,
   ensureReqBodyCorrectUserOrAdmin,
   ensureCorrectUserOrAdmin,
+  ensureSuperAdmin,
 };
