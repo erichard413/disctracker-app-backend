@@ -19,7 +19,7 @@
     },
     "zip": {
       "type": "string",
-      "minLength": 5,
+      "minLength": 0,
       "maxLength": 15
     },
     "note": {

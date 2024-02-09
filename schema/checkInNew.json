@@ -19,7 +19,7 @@
     },
     "zip": {
       "type": "string",
-      "minLength": 5,
+      "minLength": 0,
       "maxLength": 15
     },
     "note": {
@@ -28,5 +28,5 @@
     }
   },
   "additionalProperties": true,
-  "required": ["courseName", "city", "state", "zip"]
+  "required": ["courseName", "city", "state"]
 }
