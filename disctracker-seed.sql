@@ -27,4 +27,4 @@ VALUES ('erik',
         CURRENT_TIMESTAMP,
         TRUE,
         TRUE,
-        null),
+        null)
