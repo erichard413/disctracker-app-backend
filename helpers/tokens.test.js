@@ -10,6 +10,7 @@ describe("createToken", function () {
       iat: expect.any(Number),
       username: "test",
       isAdmin: false,
+      isSuperAdmin: false,
     });
   });
 
@@ -20,6 +21,7 @@ describe("createToken", function () {
       iat: expect.any(Number),
       username: "test",
       isAdmin: true,
+      isSuperAdmin: false,
     });
   });
 
@@ -31,6 +33,7 @@ describe("createToken", function () {
       iat: expect.any(Number),
       username: "test",
       isAdmin: false,
+      isSuperAdmin: false,
     });
   });
 });
